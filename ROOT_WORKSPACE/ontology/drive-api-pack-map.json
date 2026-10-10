@@ -1,0 +1,38 @@
+{
+  "nodes": [
+    "operator",
+    "atlas-forge",
+    "drive-api-pack",
+    "secret-scanner",
+    "api-deploy-checklist",
+    "key-vault-ui",
+    "allowlist"
+  ],
+  "edges": [
+    [
+      "atlas-forge",
+      "indexes",
+      "drive-api-pack"
+    ],
+    [
+      "drive-api-pack",
+      "feeds",
+      "secret-scanner"
+    ],
+    [
+      "drive-api-pack",
+      "feeds",
+      "api-deploy-checklist"
+    ],
+    [
+      "secret-scanner",
+      "emits",
+      "findings"
+    ],
+    [
+      "operator",
+      "must-rotate",
+      "exposed-keys"
+    ]
+  ]
+}

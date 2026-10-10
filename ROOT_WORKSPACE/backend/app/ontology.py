@@ -6,6 +6,18 @@ from typing import Any
 
 SKILL_TREE: list[dict[str, Any]] = [
     {
+        "id": "api-security",
+        "name": "API security & key hygiene",
+        "domain": "security",
+        "source": "drive-api-pack 1xtF7i4XWfsPH36xgp7pS46yvi2AGpmlb",
+        "children": [
+            "api-deployment-checklist",
+            "secret-hygiene",
+            "api-key-vault-ui",
+            "research-api-registry",
+        ],
+    },
+    {
         "id": "sec-static",
         "name": "Static security scan",
         "domain": "security",
@@ -54,6 +66,8 @@ SKILL_TREE: list[dict[str, Any]] = [
 ]
 
 TOOL_TREE: list[dict[str, Any]] = [
+    {"id": "secret-scan", "name": "Expanded secret scan", "kind": "analyzer", "endpoint": "/v1/scan"},
+    {"id": "api-deploy-checklist", "name": "API deploy checklist", "kind": "ops", "endpoint": "/v1/ontology"},
     {"id": "github-import", "name": "GitHub public import", "kind": "api", "endpoint": "/v1/import/github"},
     {"id": "hf-import", "name": "Hugging Face model import", "kind": "api", "endpoint": "/v1/import/huggingface"},
     {"id": "docker-import", "name": "Docker Hub import", "kind": "api", "endpoint": "/v1/import/docker"},

@@ -1,0 +1,17 @@
+{
+  "folder": "1xtF7i4XWfsPH36xgp7pS46yvi2AGpmlb",
+  "policy": "defensive-only",
+  "implemented": [
+    "Expanded secret scan rules FE+BE",
+    "API deployment checklist skill",
+    "Secret hygiene skill",
+    "Key vault UI patterns skill",
+    "Research API registry skill",
+    "Vault project + advisories"
+  ],
+  "not_implemented": [
+    "GITHUB_KEY_RAPIST and third-party key harvesters",
+    "Binary rpm/so execution",
+    "Storing live secrets from Drive into git"
+  ]
+}

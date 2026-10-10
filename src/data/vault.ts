@@ -476,9 +476,27 @@ export const projects: Project[] = [
       "Channel secrets (WeChat/WeCom) stay in operator environment.",
     ],
   },
+  {
+    id: "drive-api-pack",
+    name: "Drive API / Security Pack",
+    kind: "API ops & secret-hygiene corpus",
+    stack: "Docs · deployment checklists · key vault UI tests · research APIs",
+    size: "Drive folder 1xtF7i4XWfsPH36xgp7pS46yvi2AGpmlb (~40 items)",
+    status: "indexed",
+    summary:
+      "Distilled defensive modules from operator Drive pack: OpenAI Responses deployment checklist, OpenClaw cost/auth notes, tools/invoke security boundary, ApiKeysPanel multi-source key UI patterns, research API call patterns. Expanded secret scanners (sk-, ghp_, AIza, AKIA, PEM). Offensive key-scraper materials are catalog-only and not implemented. Pack contained accidental live-looking secrets — rotate those keys.",
+    gaps: [
+      "Operator must rotate any keys that appeared in Drive paste files.",
+      "Binary tools (apitrace rpm, .so) are not executed in this console.",
+      "VS Code extension PDFs are reference-only.",
+    ],
+  },
 ];
 
 export const advisories: Advisory[] = [
+  { id: "DRIVE-PACK-SECRET-OPENAI", project: "Drive API Pack", kind: "Exposed OpenAI-style key in curl sample", score: "9.0" },
+  { id: "DRIVE-PACK-SECRET-FIREBASE", project: "Drive API Pack", kind: "Firebase client config embedded in JS", score: "6.5" },
+  { id: "DRIVE-PACK-OFFENSIVE-SKIP", project: "Drive API Pack", kind: "Credential-scraper materials not operationalized", score: "0.0" },
   { id: "GHSA-g353-mgv3-8pcj", project: "OpenClaw", kind: "Signature verification bypass", score: "8.6" },
   { id: "GHSA-99qw-6mr3-36qr", project: "OpenClaw", kind: "Code execution", score: "8.5" },
   { id: "GHSA-7h7g-x2px-94hj", project: "OpenClaw", kind: "Credential exposure", score: "6.9" },
@@ -504,6 +522,8 @@ export const relations: Relation[] = [
   { from: "Findings", rel: "export", to: "Reports" },
   { from: "Atlas Forge", rel: "indexes", to: "NodeTool" },
   { from: "Atlas Forge", rel: "indexes", to: "DeerFlow" },
+  { from: "Atlas Forge", rel: "indexes", to: "Drive API / Security Pack" },
+  { from: "Drive API / Security Pack", rel: "teaches", to: "Secret hygiene" },
   { from: "DeerFlow", rel: "provides", to: "Agent skills" },
   { from: "NodeTool", rel: "runs", to: "DAG kernel" },
   { from: "NodeTool", rel: "exposes", to: "MCP" },

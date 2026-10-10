@@ -1,0 +1,142 @@
+{
+  "folder_id": "1xtF7i4XWfsPH36xgp7pS46yvi2AGpmlb",
+  "folder_url": "https://drive.google.com/drive/folders/1xtF7i4XWfsPH36xgp7pS46yvi2AGpmlb",
+  "ingestedAt": "2026-10-10T16:01:36.078977Z",
+  "policy": {
+    "include": [
+      "deployment",
+      "secret-hygiene",
+      "key-vault-ui",
+      "allowlist",
+      "defensive-scan",
+      "api-registry"
+    ],
+    "exclude": [
+      "credential-harvest scrapers",
+      "offensive key rapists",
+      "live secret material in git"
+    ],
+    "findings": [
+      "curl_openai.txt contains a live-looking OpenAI sk-proj key \u2014 ROTATE immediately; never commit.",
+      "import_initapiscrspe embeds Firebase client config \u2014 treat as public-ish but audit RTDB rules.",
+      "GITHUB_KEY_RAPIST / scraper materials cataloged only \u2014 not implemented."
+    ]
+  },
+  "items": [
+    {
+      "name": "7 Ways React Developers Leak API Keys...PDF",
+      "type": "pdf",
+      "tag": "security-education"
+    },
+    {
+      "name": "API deployment.txt",
+      "type": "txt",
+      "tag": "openai-deploy-checklist"
+    },
+    {
+      "name": "API Keys _ Swagger Docs.PDF",
+      "type": "pdf",
+      "tag": "swagger-keys"
+    },
+    {
+      "name": "api-usage-costs.md",
+      "type": "md",
+      "tag": "openclaw-costs"
+    },
+    {
+      "name": "API_ENDPOINTS_DEPLOY_ALL_PY.pdf/txt",
+      "type": "doc",
+      "tag": "multi-agent-endpoints"
+    },
+    {
+      "name": "api_references.md",
+      "type": "md",
+      "tag": "api-refs"
+    },
+    {
+      "name": "ApiKeysPanel.test.jsx",
+      "type": "test",
+      "tag": "key-vault-ui"
+    },
+    {
+      "name": "apitrace rpm",
+      "type": "binary",
+      "tag": "skip-binary"
+    },
+    {
+      "name": "Authoring Python Extensions VSCode PDFs",
+      "type": "pdf",
+      "tag": "vscode-ext"
+    },
+    {
+      "name": "backup.zip",
+      "type": "zip",
+      "tag": "tiny-backup"
+    },
+    {
+      "name": "capi.so variants",
+      "type": "binary",
+      "tag": "skip-binary"
+    },
+    {
+      "name": "claude-max-api-proxy.md",
+      "type": "md",
+      "tag": "proxy-compat"
+    },
+    {
+      "name": "Commands/Custom Data/Editor/FS/SCM/Task/Testing/Web/Trust VSCode PDFs",
+      "type": "pdf",
+      "tag": "vscode-ext"
+    },
+    {
+      "name": "curl openai.txt",
+      "type": "txt",
+      "tag": "SECRET_EXPOSURE_ROTATE"
+    },
+    {
+      "name": "Explore Leaked Keys APIRadar",
+      "type": "doc",
+      "tag": "defensive-leak-monitor"
+    },
+    {
+      "name": "GitHub API Key Scraper PDF / GITHUB_KEY_RAPIST py",
+      "type": "offensive",
+      "tag": "DO_NOT_OPERATIONALIZE"
+    },
+    {
+      "name": "import initapiscrspe",
+      "type": "js",
+      "tag": "firebase-app-SECRET_EXPOSURE"
+    },
+    {
+      "name": "Research & Data-API BUILD",
+      "type": "doc",
+      "tag": "research-api-patterns"
+    },
+    {
+      "name": "Skill_Seekers scraping PDF",
+      "type": "pdf",
+      "tag": "skill-scraping-docs"
+    },
+    {
+      "name": "tools-invoke-http-api.md",
+      "type": "md",
+      "tag": "gateway-tools-invoke"
+    },
+    {
+      "name": "UNIVERSAL API EDITOR.pdf",
+      "type": "pdf",
+      "tag": "api-editor"
+    },
+    {
+      "name": "XAI_API_KEY WPS pdf",
+      "type": "pdf",
+      "tag": "key-template"
+    }
+  ],
+  "counts": {
+    "items": 22,
+    "offensive_skipped": 1,
+    "secret_exposures": 2
+  }
+}

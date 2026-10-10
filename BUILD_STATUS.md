@@ -1,13 +1,20 @@
-# Atlas Forge — Background Task Managers
+# Atlas Forge — Cycle 3 (Drive API pack)
+
+## Source
+https://drive.google.com/drive/folders/1xtF7i4XWfsPH36xgp7pS46yvi2AGpmlb
 
 ## Production
-https://atlas-forge-console.vercel.app/jobs
+https://atlas-forge-console.vercel.app
 
-## Frontend (best-manager)
-- Priority queue · concurrency · retries · AbortSignal cancel
-- localStorage job log · nav badge · dual Jobs UI
-- Optional remote bridge: `VITE_ATLAS_API_URL`
+## Distilled (defensive only)
+- Skills: api-deployment-checklist, secret-hygiene, api-key-vault-ui, research-api-registry
+- Expanded secret scanners FE+BE (sk-, ghp_, AIza, AKIA, slack, PEM)
+- Vault project + advisories (rotate exposed Drive paste keys)
+- Catalog: ROOT_WORKSPACE/source-mirror/drive-api-pack/
 
-## Backend
-- `ROOT_WORKSPACE/backend` TaskManager: priority heap, retries, batch parents
-- `POST /v1/jobs` · `POST /v1/jobs/batch` · `GET /v1/jobs` · cancel · stats · config
+## Not implemented
+- Offensive credential harvesters
+- Embedding live secrets from Drive into git
+
+## Operator action
+Rotate any OpenAI/Firebase credentials that appeared in Drive paste files.
