@@ -1,0 +1,9 @@
+{
+  "id": "music-generation",
+  "name": "music-generation",
+  "path": "skills/public/music-generation/SKILL.md",
+  "description": "Use this skill when the user requests to generate, create, compose, or produce music or songs \u2014 background music, theme songs, jingles, or instrumental tracks. Generates a song from a style/mood prompt and optional lyrics via the MiniMax music API.",
+  "size": 2875,
+  "has_scripts": true,
+  "has_refs": false
+}

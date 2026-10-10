@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-10-10T15:02:25.087215Z",
+  "plugins": [
+    "oauth-github",
+    "vercel-deploy",
+    "hf-models",
+    "allowlist",
+    "mcp-bridge"
+  ]
+}

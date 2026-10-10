@@ -1,0 +1,6 @@
+{
+  "services": [
+    {"id": "atlas-api", "port": 8000, "path": "backend"},
+    {"id": "atlas-console", "url": "https://atlas-forge-console.vercel.app"}
+  ]
+}

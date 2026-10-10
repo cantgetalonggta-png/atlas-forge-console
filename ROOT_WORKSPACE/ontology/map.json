@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    "operator",
+    "atlas-forge",
+    "deepaudit",
+    "agent-network",
+    "natamux",
+    "nodetool",
+    "deer-flow",
+    "github-api",
+    "hf-api",
+    "docker-api",
+    "vercel",
+    "findings"
+  ],
+  "relations": [
+    "opens",
+    "indexes",
+    "calls",
+    "deploys",
+    "emits"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "smoke-test",
+  "name": "smoke-test",
+  "path": ".agent/skills/smoke-test/SKILL.md",
+  "description": "End-to-end smoke test skill for DeerFlow. Guides through: 1) Pulling latest code, 2) Docker OR Local installation and deployment (user preference, default to Local if Docker network issues), 3) Service availability verification, 4) Health check, 5) Final test report. Use when the user says \"run smoke test\", \"smoke test deployment\", \"verify installation\", \"test service availability\", \"end-to-end test\", or similar.",
+  "size": 10097,
+  "has_scripts": true,
+  "has_refs": true
+}

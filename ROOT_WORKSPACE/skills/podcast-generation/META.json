@@ -1,0 +1,9 @@
+{
+  "id": "podcast-generation",
+  "name": "podcast-generation",
+  "path": "skills/public/podcast-generation/SKILL.md",
+  "description": "Use this skill when the user requests to generate, create, or produce podcasts from text content. Converts written content into a two-host conversational podcast audio format with natural dialogue.",
+  "size": 8630,
+  "has_scripts": true,
+  "has_refs": true
+}

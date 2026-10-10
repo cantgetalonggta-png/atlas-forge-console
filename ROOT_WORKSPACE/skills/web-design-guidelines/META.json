@@ -1,0 +1,9 @@
+{
+  "id": "web-design-guidelines",
+  "name": "web-design-guidelines",
+  "path": "skills/public/web-design-guidelines/SKILL.md",
+  "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
+  "size": 1231,
+  "has_scripts": false,
+  "has_refs": false
+}

@@ -1,0 +1,9 @@
+{
+  "id": "video-generation",
+  "name": "video-generation",
+  "path": "skills/public/video-generation/SKILL.md",
+  "description": "Use this skill when the user requests to generate, create, or imagine videos. Supports structured prompts and reference image for guided generation.",
+  "size": 5487,
+  "has_scripts": true,
+  "has_refs": false
+}

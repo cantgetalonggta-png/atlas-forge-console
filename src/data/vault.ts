@@ -462,6 +462,20 @@ export const projects: Project[] = [
       "Public-repo exposure monitor: detect, then summarize provider mix. This console does not store secrets or account folders.",
     gaps: ["Live GitHub scan is not connected. Counts below are product claims from the capture, not a fresh crawl."],
   },
+  {
+    id: "deer-flow",
+    name: "DeerFlow",
+    kind: "Agent platform monorepo",
+    stack: "Python backend · frontend · Docker · agent skills",
+    size: "deer-flow-main.zip (~32 MB cataloged)",
+    status: "indexed",
+    summary:
+      "Ingested monorepo: ~1980 backend Python modules, agent skills (blocking-io-guard, deerflow-maintainer-orchestrator, engineer-system-change, smoke-test), frontend package, CI (unit/e2e/docker). ROOT_WORKSPACE cycle2 mirrors skills + FastAPI control API.",
+    gaps: [
+      "Full DeerFlow stack runs on operator host/Docker — not inside this web console.",
+      "Channel secrets (WeChat/WeCom) stay in operator environment.",
+    ],
+  },
 ];
 
 export const advisories: Advisory[] = [
@@ -489,6 +503,8 @@ export const relations: Relation[] = [
   { from: "MCP hub", rel: "dispatches", to: "Agent nodes" },
   { from: "Findings", rel: "export", to: "Reports" },
   { from: "Atlas Forge", rel: "indexes", to: "NodeTool" },
+  { from: "Atlas Forge", rel: "indexes", to: "DeerFlow" },
+  { from: "DeerFlow", rel: "provides", to: "Agent skills" },
   { from: "NodeTool", rel: "runs", to: "DAG kernel" },
   { from: "NodeTool", rel: "exposes", to: "MCP" },
   { from: "Atlas Forge", rel: "imports", to: "GitHub public API" },

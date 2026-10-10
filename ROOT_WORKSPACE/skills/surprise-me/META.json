@@ -1,0 +1,9 @@
+{
+  "id": "surprise-me",
+  "name": "surprise-me",
+  "path": "skills/public/surprise-me/SKILL.md",
+  "description": "Create a delightful, unexpected \"wow\" experience for the user by dynamically discovering and creatively combining other enabled skills. Triggers when the user says \"surprise me\" or any request expressing a desire for an unexpected creative showcase. Also triggers when the user is bored, wants inspiration, or asks for \"something interesting\".",
+  "size": 2640,
+  "has_scripts": false,
+  "has_refs": false
+}

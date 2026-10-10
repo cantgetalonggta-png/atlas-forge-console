@@ -1,0 +1,9 @@
+{
+  "id": "deerflow-maintainer-orchestrator",
+  "name": "deerflow-maintainer-orchestrator",
+  "path": ".agent/skills/deerflow-maintainer-orchestrator/SKILL.md",
+  "description": "Use when a DeerFlow maintainer needs comment-only GitHub issue or PR handling: resolve issue/PR scopes with gh, analyze issues, post or draft issue comments, perform PR review comments, review PR or issue batches, compare competing PRs that target the same issue, give fix strategy, risk classification, and validation guidance. Intended for maintainers and trusted local agents, not general contributors.",
+  "size": 21438,
+  "has_scripts": false,
+  "has_refs": false
+}

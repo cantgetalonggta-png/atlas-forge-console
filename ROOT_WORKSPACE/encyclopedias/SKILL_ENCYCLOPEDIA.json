@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-10-10T15:02:31.401245Z",
+  "count": 27,
+  "skills": [
+    {
+      "id": "academic-paper-review",
+      "path": "skills/academic-paper-review"
+    },
+    {
+      "id": "blocking-io-guard",
+      "path": "skills/blocking-io-guard"
+    },
+    {
+      "id": "bootstrap",
+      "path": "skills/bootstrap"
+    },
+    {
+      "id": "chart-visualization",
+      "path": "skills/chart-visualization"
+    },
+    {
+      "id": "claude-to-deerflow",
+      "path": "skills/claude-to-deerflow"
+    },
+    {
+      "id": "code-documentation",
+      "path": "skills/code-documentation"
+    },
+    {
+      "id": "consulting-analysis",
+      "path": "skills/consulting-analysis"
+    },
+    {
+      "id": "data-analysis",
+      "path": "skills/data-analysis"
+    },
+    {
+      "id": "deep-research",
+      "path": "skills/deep-research"
+    },
+    {
+      "id": "deerflow-maintainer-orchestrator",
+      "path": "skills/deerflow-maintainer-orchestrator"
+    },
+    {
+      "id": "engineer-system-change",
+      "path": "skills/engineer-system-change"
+    },
+    {
+      "id": "find-skills",
+      "path": "skills/find-skills"
+    },
+    {
+      "id": "frontend-design",
+      "path": "skills/frontend-design"
+    },
+    {
+      "id": "github-deep-research",
+      "path": "skills/github-deep-research"
+    },
+    {
+      "id": "image-generation",
+      "path": "skills/image-generation"
+    },
+    {
+      "id": "music-generation",
+      "path": "skills/music-generation"
+    },
+    {
+      "id": "newsletter-generation",
+      "path": "skills/newsletter-generation"
+    },
+    {
+      "id": "podcast-generation",
+      "path": "skills/podcast-generation"
+    },
+    {
+      "id": "ppt-generation",
+      "path": "skills/ppt-generation"
+    },
+    {
+      "id": "skill-creator",
+      "path": "skills/skill-creator"
+    },
+    {
+      "id": "skill-reviewer",
+      "path": "skills/skill-reviewer"
+    },
+    {
+      "id": "smoke-test",
+      "path": "skills/smoke-test"
+    },
+    {
+      "id": "surprise-me",
+      "path": "skills/surprise-me"
+    },
+    {
+      "id": "systematic-literature-review",
+      "path": "skills/systematic-literature-review"
+    },
+    {
+      "id": "vercel-deploy",
+      "path": "skills/vercel-deploy"
+    },
+    {
+      "id": "video-generation",
+      "path": "skills/video-generation"
+    },
+    {
+      "id": "web-design-guidelines",
+      "path": "skills/web-design-guidelines"
+    }
+  ]
+}

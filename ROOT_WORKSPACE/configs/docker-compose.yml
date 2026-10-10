@@ -1,0 +1,8 @@
+services:
+  api:
+    build: ../backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - CORS_ORIGINS=https://atlas-forge-console.vercel.app,http://localhost:8080

@@ -1,0 +1,16 @@
+{
+  "cycle": 2,
+  "generatedAt": "2026-10-10T15:02:25.087215Z",
+  "productionUrl": "https://atlas-forge-console.vercel.app",
+  "backend": "ROOT_WORKSPACE/backend FastAPI",
+  "ingested": [
+    "deer-flow-main.zip",
+    "Drive TAR cycle1",
+    "vault folders metadata"
+  ],
+  "tests": "pytest backend",
+  "next": [
+    "optional Railway/Fly for API",
+    "OAuth secrets in Vercel env"
+  ]
+}

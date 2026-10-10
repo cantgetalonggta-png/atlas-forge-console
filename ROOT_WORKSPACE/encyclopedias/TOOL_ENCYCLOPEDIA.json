@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-10-10T15:02:25.087215Z",
+  "tools": [
+    {
+      "id": "github-import",
+      "layer": "api"
+    },
+    {
+      "id": "hf-import",
+      "layer": "api"
+    },
+    {
+      "id": "docker-import",
+      "layer": "api"
+    },
+    {
+      "id": "scan-snippet",
+      "layer": "analyzer"
+    },
+    {
+      "id": "health-probes",
+      "layer": "ops"
+    },
+    {
+      "id": "ontology-export",
+      "layer": "graph"
+    }
+  ]
+}

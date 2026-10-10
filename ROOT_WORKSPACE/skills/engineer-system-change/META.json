@@ -1,0 +1,9 @@
+{
+  "id": "engineer-system-change",
+  "name": "engineer-system-change",
+  "path": ".agent/skills/engineer-system-change/SKILL.md",
+  "description": "Evaluate and carry out non-trivial software-system changes from first principles. Use when assessing RFCs, issues, designs, features, refactors, migrations, dependency changes, or proposed fields, events, APIs, modules, and services whose need, consumers, system fit, validation, or rollback require scrutiny. Read the actual system, identify the concrete problem and named semantic consumers, choose the smallest sufficient solution, reject pseudo-requirements and speculative abstractions, and requ",
+  "size": 9846,
+  "has_scripts": false,
+  "has_refs": false
+}

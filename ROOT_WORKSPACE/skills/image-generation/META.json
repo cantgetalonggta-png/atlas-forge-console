@@ -1,0 +1,9 @@
+{
+  "id": "image-generation",
+  "name": "image-generation",
+  "path": "skills/public/image-generation/SKILL.md",
+  "description": "Use this skill when the user requests to generate, create, imagine, or visualize images including characters, scenes, products, or any visual content. Supports structured prompts and reference images for guided generation.",
+  "size": 11444,
+  "has_scripts": true,
+  "has_refs": true
+}

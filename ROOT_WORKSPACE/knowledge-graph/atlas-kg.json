@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-10-10T15:02:25.087215Z",
+  "sources": [
+    "Drive vault 1fobEDI...",
+    "deer-flow-main.zip",
+    "ROOT_WORKSPACE cycle1 TAR",
+    "atlas-forge-console live"
+  ],
+  "skillTreeRoots": [
+    "sec-static",
+    "agent-orch",
+    "creative-dag",
+    "deerflow-ops",
+    "research"
+  ],
+  "projects": [
+    "deepaudit",
+    "agent-network",
+    "natamux",
+    "nodetool",
+    "deer-flow",
+    "apiradar"
+  ],
+  "deerflowBackendPyFiles": 1981
+}

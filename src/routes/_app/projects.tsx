@@ -29,6 +29,11 @@ const setupAnchors: Record<string, { href: string; label: string; setupId?: stri
     label: "Install NodeTool Studio",
     setupId: "nodetool-studio",
   },
+  "deer-flow": {
+    href: "https://github.com/search?q=deer-flow&type=repositories",
+    label: "DeerFlow sources",
+    setupId: "deer-flow",
+  },
   apiradar: {
     href: "/import",
     label: "Import public repos",

@@ -1,0 +1,9 @@
+{
+  "id": "ppt-generation",
+  "name": "ppt-generation",
+  "path": "skills/public/ppt-generation/SKILL.md",
+  "description": "Use this skill when the user requests to generate, create, or make presentations (PPT/PPTX). Creates visually rich slides by generating images for each slide and composing them into a PowerPoint file.",
+  "size": 28359,
+  "has_scripts": true,
+  "has_refs": false
+}

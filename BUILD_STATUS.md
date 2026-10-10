@@ -1,21 +1,21 @@
-# Atlas Forge — LIVE production
+# Atlas Forge — Cycle 2 BUILD STATUS
 
-## Production URL
+## Production
 https://atlas-forge-console.vercel.app
 
-Deployment: dpl_7XtSp7px5rzJhf76eKKQn9HL9Tzv  
-Commit: 6dcad46  
-State: READY (production)
+## Cycle 2 (Drive TAR + deer-flow)
+- Ingested Drive TAR: ROOT_WORKSPACE-cycle1-2026-10-10.tar.gz
+- Ingested deer-flow-main.zip (~1980 backend .py indexed)
+- Monorepo: `/ROOT_WORKSPACE` (backend FastAPI, skills, encyclopedias, ontology)
+- DeerFlow project + setup guide wired into console
 
-## Routes (all HTTP 200)
-/, /import, /projects, /skills, /tools, /plugins, /ontology, /analyze, /connectors, /setup
+## Backend API (self-host)
+```
+cd ROOT_WORKSPACE/backend
+pip install -r requirements.txt
+uvicorn app.main:app --port 8000
+pytest -q
+```
 
-## What is live in the web console
-- Vault ontology (skills/tools/plugins/projects)
-- Live GitHub / Hugging Face / Docker Hub import
-- Instant snippet analysis
-- Live health probes (server-side)
-- Setup + desktop binary install guides with real download links
-
-## What you install on the desktop (not bundled)
-See /setup — Agent Network desktop, NodeTool Studio, Natamux ADE, DeepAudit stack.
+## Desktop binaries
+Still not bundled in web console — see /setup

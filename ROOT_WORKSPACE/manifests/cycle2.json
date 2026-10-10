@@ -1,0 +1,17 @@
+{
+  "name": "ROOT_WORKSPACE-cycle2-2026-10-10.tar.gz",
+  "bytes": 161364,
+  "sha256": "9bc0353bb0ee34fded0d4c981816b6b7168eea8634fdcb91c6187a96f4338a8c",
+  "cycle": 2,
+  "skills": 27,
+  "backend_tests": "8 passed",
+  "production": "https://atlas-forge-console.vercel.app",
+  "contents": [
+    "backend FastAPI",
+    "skills x27",
+    "encyclopedias",
+    "ontology",
+    "knowledge-graph",
+    "source-mirror/deer-flow"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "systematic-literature-review",
+  "name": "systematic-literature-review",
+  "path": "skills/public/systematic-literature-review/SKILL.md",
+  "description": "Use this skill when the user wants a systematic literature review, survey, or synthesis across multiple academic papers on a topic. Also covers annotated bibliographies and cross-paper comparisons. Searches arXiv and outputs reports in APA, IEEE, or BibTeX format. Not for single-paper tasks \u2014 use academic-paper-review for reviewing one paper.",
+  "size": 17256,
+  "has_scripts": true,
+  "has_refs": true
+}

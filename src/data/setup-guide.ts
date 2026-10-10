@@ -121,6 +121,34 @@ export const binaryInstalls: BinaryInstall[] = [
       "Atlas Forge Analyze is the browser-safe snippet scanner only.",
     ],
   },
+
+  {
+    id: "deer-flow",
+    product: "DeerFlow platform",
+    role: "Full agent monorepo (Python backend + frontend + skills)",
+    whyNotInWeb:
+      "DeerFlow includes long-running workers, channel integrations, and Docker images. Atlas Forge indexes the zip and exposes a FastAPI control API under ROOT_WORKSPACE/backend; you run DeerFlow itself on your infra.",
+    platforms: ["Linux", "macOS", "Docker"],
+    downloadUrl: "https://github.com/search?q=deer-flow&type=repositories",
+    docsUrl: "https://github.com/search?q=deer-flow&type=repositories",
+    installSteps: [
+      "Obtain deer-flow-main.zip from Drive or clone upstream.",
+      "Extract; copy .env.example → .env and set model/channel secrets.",
+      "Install Python backend deps (see backend pyproject/requirements).",
+      "Install frontend deps from frontend/package.json.",
+      "Use smoke-test skill scripts under .agent/skills/smoke-test/scripts/.",
+      "Optional: run Atlas ROOT_WORKSPACE/backend API alongside the console.",
+    ],
+    verifyCommands: [
+      "cd ROOT_WORKSPACE/backend && pytest -q",
+      "uvicorn app.main:app --port 8000",
+      "curl -fsS http://127.0.0.1:8000/health",
+    ],
+    notes: [
+      "Agent skills live under skills/ after distill (blocking-io-guard, etc.).",
+      "Do not commit channel secrets.",
+    ],
+  },
 ];
 
 export const hostTooling = [
