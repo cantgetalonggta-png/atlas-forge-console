@@ -95,7 +95,13 @@ function Command() {
               to="/import"
               className="flex min-h-11 items-center justify-center rounded-xl border border-border bg-surface px-4 text-sm font-medium"
             >
-              Import from GitHub
+              Live import
+            </Link>
+            <Link
+              to="/setup"
+              className="flex min-h-11 items-center justify-center rounded-xl border border-border bg-surface px-4 text-sm font-medium"
+            >
+              Setup desktop binaries
             </Link>
             <Link
               to="/analyze"

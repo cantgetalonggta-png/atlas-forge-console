@@ -420,7 +420,10 @@ export const projects: Project[] = [
     status: "indexed",
     summary:
       "Self-hosted hub that treats Claude Code, Codex, Grok Build, and OpenCode as nodes. Tasks, files, and rules stay on hardware you control.",
-    gaps: ["Desktop binaries are not bundled in this web console."],
+    gaps: [
+      "Desktop binaries are not bundled in this web console — install from Setup → Agent Network Desktop (GitHub releases / anet.sh).",
+      "Hub and nodes run on your machines via anet daemon + SSE/MCP.",
+    ],
   },
   {
     id: "natamux",
@@ -508,8 +511,12 @@ export const issueMix = [
 ];
 
 export const services = [
-  { name: "Google Drive", state: "Vault read complete (NodeTool tree indexed)" },
-  { name: "GitHub", state: "Live public import on /import" },
-  { name: "Vercel", state: "Reauth required — write scope echo-ec69 blocked" },
-  { name: "Hugging Face", state: "Present under NodeTool packages/huggingface*" },
-];
+  { name: "Vercel", state: "Production https://atlas-forge-console.vercel.app" },
+  { name: "GitHub", state: "Public API import + search live" },
+  { name: "Hugging Face", state: "Public model API import live" },
+  { name: "Docker Hub", state: "Public image API import live" },
+  { name: "Google Drive", state: "Vault packs indexed (NodeTool tree cataloged)" },
+  { name: "Agent Network desktop", state: "Install separately — see Setup page" },
+  { name: "NodeTool Studio", state: "Install separately — see Setup page" },
+] as const;
+

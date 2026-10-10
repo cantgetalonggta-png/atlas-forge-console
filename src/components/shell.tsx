@@ -9,6 +9,7 @@ import {
   Shield,
   Download,
   Link2,
+  Settings2,
   Wrench,
   X,
 } from "lucide-react";
@@ -23,6 +24,7 @@ const nav = [
   { to: "/projects", label: "Projects", icon: FolderGit2 },
   { to: "/import", label: "Import", icon: Download },
   { to: "/connectors", label: "Connectors", icon: Link2 },
+  { to: "/setup", label: "Setup", icon: Settings2 },
   { to: "/analyze", label: "Analyze", icon: ScanSearch },
 ] as const;
 
@@ -67,7 +69,7 @@ export function Shell({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
-          <p className="px-5 py-4 font-mono text-xs text-muted">Vault indexed · local preview</p>
+          <p className="px-5 py-4 font-mono text-xs text-muted">Live · atlas-forge-console.vercel.app</p>
         </aside>
         {open ? (
           <button

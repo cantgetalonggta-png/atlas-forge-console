@@ -12,11 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAnalyzeRouteImport } from './routes/_app/analyze'
-import { Route as AppImportRouteImport } from './routes/_app/import'
 import { Route as AppConnectorsRouteImport } from './routes/_app/connectors'
+import { Route as AppImportRouteImport } from './routes/_app/import'
 import { Route as AppOntologyRouteImport } from './routes/_app/ontology'
 import { Route as AppPluginsRouteImport } from './routes/_app/plugins'
 import { Route as AppProjectsRouteImport } from './routes/_app/projects'
+import { Route as AppSetupRouteImport } from './routes/_app/setup'
 import { Route as AppSkillsRouteImport } from './routes/_app/skills'
 import { Route as AppToolsRouteImport } from './routes/_app/tools'
 
@@ -34,14 +35,14 @@ const AppAnalyzeRoute = AppAnalyzeRouteImport.update({
   path: '/analyze',
   getParentRoute: () => AppRoute,
 } as any)
-const AppImportRoute = AppImportRouteImport.update({
-  id: '/import',
-  path: '/import',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppConnectorsRoute = AppConnectorsRouteImport.update({
   id: '/connectors',
   path: '/connectors',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppImportRoute = AppImportRouteImport.update({
+  id: '/import',
+  path: '/import',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOntologyRoute = AppOntologyRouteImport.update({
@@ -59,6 +60,11 @@ const AppProjectsRoute = AppProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSetupRoute = AppSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSkillsRoute = AppSkillsRouteImport.update({
   id: '/skills',
   path: '/skills',
@@ -73,21 +79,23 @@ const AppToolsRoute = AppToolsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/analyze': typeof AppAnalyzeRoute
-  '/import': typeof AppImportRoute
   '/connectors': typeof AppConnectorsRoute
+  '/import': typeof AppImportRoute
   '/ontology': typeof AppOntologyRoute
   '/plugins': typeof AppPluginsRoute
   '/projects': typeof AppProjectsRoute
+  '/setup': typeof AppSetupRoute
   '/skills': typeof AppSkillsRoute
   '/tools': typeof AppToolsRoute
 }
 export interface FileRoutesByTo {
   '/analyze': typeof AppAnalyzeRoute
-  '/import': typeof AppImportRoute
   '/connectors': typeof AppConnectorsRoute
+  '/import': typeof AppImportRoute
   '/ontology': typeof AppOntologyRoute
   '/plugins': typeof AppPluginsRoute
   '/projects': typeof AppProjectsRoute
+  '/setup': typeof AppSetupRoute
   '/skills': typeof AppSkillsRoute
   '/tools': typeof AppToolsRoute
   '/': typeof AppIndexRoute
@@ -96,11 +104,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_app/analyze': typeof AppAnalyzeRoute
-  '/_app/import': typeof AppImportRoute
   '/_app/connectors': typeof AppConnectorsRoute
+  '/_app/import': typeof AppImportRoute
   '/_app/ontology': typeof AppOntologyRoute
   '/_app/plugins': typeof AppPluginsRoute
   '/_app/projects': typeof AppProjectsRoute
+  '/_app/setup': typeof AppSetupRoute
   '/_app/skills': typeof AppSkillsRoute
   '/_app/tools': typeof AppToolsRoute
   '/_app/': typeof AppIndexRoute
@@ -110,21 +119,23 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/analyze'
-    | '/import'
     | '/connectors'
+    | '/import'
     | '/ontology'
     | '/plugins'
     | '/projects'
+    | '/setup'
     | '/skills'
     | '/tools'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/analyze'
-    | '/import'
     | '/connectors'
+    | '/import'
     | '/ontology'
     | '/plugins'
     | '/projects'
+    | '/setup'
     | '/skills'
     | '/tools'
     | '/'
@@ -132,11 +143,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_app/analyze'
-    | '/_app/import'
     | '/_app/connectors'
+    | '/_app/import'
     | '/_app/ontology'
     | '/_app/plugins'
     | '/_app/projects'
+    | '/_app/setup'
     | '/_app/skills'
     | '/_app/tools'
     | '/_app/'
@@ -169,18 +181,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAnalyzeRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/import': {
-      id: '/_app/import'
-      path: '/import'
-      fullPath: '/import'
-      preLoaderRoute: typeof AppImportRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/connectors': {
       id: '/_app/connectors'
       path: '/connectors'
       fullPath: '/connectors'
       preLoaderRoute: typeof AppConnectorsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/import': {
+      id: '/_app/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof AppImportRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ontology': {
@@ -204,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProjectsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/setup': {
+      id: '/_app/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof AppSetupRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/skills': {
       id: '/_app/skills'
       path: '/skills'
@@ -223,11 +242,12 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAnalyzeRoute: typeof AppAnalyzeRoute
-  AppImportRoute: typeof AppImportRoute
   AppConnectorsRoute: typeof AppConnectorsRoute
+  AppImportRoute: typeof AppImportRoute
   AppOntologyRoute: typeof AppOntologyRoute
   AppPluginsRoute: typeof AppPluginsRoute
   AppProjectsRoute: typeof AppProjectsRoute
+  AppSetupRoute: typeof AppSetupRoute
   AppSkillsRoute: typeof AppSkillsRoute
   AppToolsRoute: typeof AppToolsRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -235,11 +255,12 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAnalyzeRoute: AppAnalyzeRoute,
-  AppImportRoute: AppImportRoute,
   AppConnectorsRoute: AppConnectorsRoute,
+  AppImportRoute: AppImportRoute,
   AppOntologyRoute: AppOntologyRoute,
   AppPluginsRoute: AppPluginsRoute,
   AppProjectsRoute: AppProjectsRoute,
+  AppSetupRoute: AppSetupRoute,
   AppSkillsRoute: AppSkillsRoute,
   AppToolsRoute: AppToolsRoute,
   AppIndexRoute: AppIndexRoute,
