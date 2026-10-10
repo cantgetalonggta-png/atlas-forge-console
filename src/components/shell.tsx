@@ -10,6 +10,7 @@ import {
   Download,
   Link2,
   Settings2,
+  ListTodo,
   Wrench,
   X,
 } from "lucide-react";
@@ -25,6 +26,7 @@ const nav = [
   { to: "/import", label: "Import", icon: Download },
   { to: "/connectors", label: "Connectors", icon: Link2 },
   { to: "/setup", label: "Setup", icon: Settings2 },
+  { to: "/jobs", label: "Jobs", icon: ListTodo },
   { to: "/analyze", label: "Analyze", icon: ScanSearch },
 ] as const;
 

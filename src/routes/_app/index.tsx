@@ -104,6 +104,12 @@ function Command() {
               Setup desktop binaries
             </Link>
             <Link
+              to="/jobs"
+              className="flex min-h-11 items-center justify-center rounded-xl border border-border bg-surface px-4 text-sm font-medium"
+            >
+              Background jobs
+            </Link>
+            <Link
               to="/analyze"
               className="flex min-h-11 items-center justify-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-fg"
             >

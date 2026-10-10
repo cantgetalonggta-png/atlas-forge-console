@@ -11,8 +11,11 @@ from .importers import import_docker, import_github, import_huggingface, parse_g
 from .oauth import github_authorize_url, oauth_status
 from .ontology import ONTOLOGY_MAP, PLUGIN_TREE, PROJECTS, SKILL_TREE, TOOL_TREE
 from .scan import scan_source
+from .task_manager import manager
+from .task_handlers import register_all
 
 app = FastAPI(title=settings.app_name, version=__version__)
+register_all(manager)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_list(),
@@ -117,3 +120,60 @@ async def integrations_status() -> dict:
 @app.post("/v1/oauth/github/start")
 async def oauth_github_start(body: OAuthStartBody) -> dict:
     return github_authorize_url(body.redirect_uri, body.state)
+
+
+class JobCreateBody(BaseModel):
+    kind: str
+    input: dict = Field(default_factory=dict)
+
+
+class BatchCreateBody(BaseModel):
+    items: list[JobCreateBody]
+
+
+@app.get("/v1/jobs/stats")
+async def job_stats() -> dict:
+    return manager.stats()
+
+
+@app.get("/v1/jobs")
+async def list_jobs(limit: int = 50, kind: str | None = None) -> dict:
+    jobs = manager.list_jobs(limit=limit, kind=kind)
+    return {"items": [j.to_public() for j in jobs]}
+
+
+@app.get("/v1/jobs/{job_id}")
+async def get_job(job_id: str) -> dict:
+    job = manager.get(job_id)
+    if not job:
+        raise HTTPException(404, "job not found")
+    return job.to_public()
+
+
+@app.post("/v1/jobs")
+async def create_job(body: JobCreateBody) -> dict:
+    try:
+        job = await manager.enqueue(body.kind, body.input)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    return job.to_public()
+
+
+@app.post("/v1/jobs/batch")
+async def create_batch(body: BatchCreateBody) -> dict:
+    try:
+        job = await manager.enqueue_batch(
+            [{"kind": i.kind, "input": i.input} for i in body.items]
+        )
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    return job.to_public()
+
+
+@app.post("/v1/jobs/{job_id}/cancel")
+async def cancel_job(job_id: str) -> dict:
+    ok = await manager.cancel(job_id)
+    if not ok:
+        raise HTTPException(400, "cannot cancel")
+    job = manager.get(job_id)
+    return job.to_public() if job else {"ok": True}

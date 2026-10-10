@@ -6,3 +6,4 @@ dist
 *.log
 .DS_Store
 ROOT_WORKSPACE/backend/.venv/
+**/__pycache__/
