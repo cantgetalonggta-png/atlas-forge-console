@@ -24,7 +24,7 @@ function ProjectsPage() {
           to="/import"
           className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-medium text-bg"
         >
-          Import from GitHub
+          Live import
         </Link>
       </div>
 

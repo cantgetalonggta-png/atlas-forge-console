@@ -8,6 +8,7 @@ import {
   ScanSearch,
   Shield,
   Download,
+  Link2,
   Wrench,
   X,
 } from "lucide-react";
@@ -21,6 +22,7 @@ const nav = [
   { to: "/ontology", label: "Ontology", icon: GitBranch },
   { to: "/projects", label: "Projects", icon: FolderGit2 },
   { to: "/import", label: "Import", icon: Download },
+  { to: "/connectors", label: "Connectors", icon: Link2 },
   { to: "/analyze", label: "Analyze", icon: ScanSearch },
 ] as const;
 

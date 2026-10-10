@@ -55,10 +55,68 @@ export type Relation = {
 };
 
 export const corpus = {
-  folder: "Drive vault",
-  indexedAt: "2026-10-10",
-  note: "Product trees only. Named-account folders under APIRadar were not loaded.",
+  folder: "Drive vault 1fobEDI-MC51zbzpP41Sm7RbdYVssY0Dh",
+  indexedAt: "2026-10-10T14:30Z",
+  note:
+    "Product trees only. NodeTool monorepo tree fully cataloged (1.6 GB zip not re-downloaded). Natamux, Agent Network, DeepAudit folders indexed. Named-account folders under APIRadar were not loaded. Live GitHub/HF/Docker import added.",
 };
+
+/** Drive folder inventory snapshot for ontology completeness */
+export const driveInventory = [
+  {
+    pack: "NodeTool",
+    folderId: "1nG5JuREJnSK9ml8u2eQqT1VsD2AzKeo7",
+    zipMb: 1598,
+    top: [
+      "packages/",
+      "plugins/",
+      "web/",
+      "electron/",
+      "mobile/",
+      "agents/",
+      "docs/",
+      "docker-compose.yml",
+      "ARCHITECTURE.md",
+      "AGENTS.md",
+    ],
+  },
+  {
+    pack: "Natamux",
+    folderId: "1232NKTRyjpc08hyF93za9eE9V8DBK345",
+    zipMb: 5.6,
+    top: [
+      "packages/",
+      "plugins/",
+      "docker/",
+      "docs/",
+      "compose.yaml",
+      "claude-plugin/",
+      "site/",
+    ],
+  },
+  {
+    pack: "Agent Network",
+    folderId: "1mpvXowNng3mC6-D6oA120yEU-fkyT4hK",
+    zipMb: 18.8,
+    top: [
+      "agent-network/",
+      "agent-node/",
+      "server/",
+      "channel/",
+      "contracts/",
+      "deploy/",
+      "docker/",
+      "integrations/",
+      "mcp.json",
+    ],
+  },
+  {
+    pack: "DeepAudit 3.0",
+    folderId: "1zMHSS2lTn1yHKIg1EXeXmzVwrihnfauJ",
+    zipMb: 60.3,
+    top: ["DeepAudit-3.0.0/"],
+  },
+] as const;
 
 export const skills: Skill[] = [
   {
@@ -220,6 +278,36 @@ export const skills: Skill[] = [
     inputs: ["owner/repo or URL"],
     outputs: ["project record"],
   },
+{
+    id: "sk_hf_import",
+    name: "Hugging Face model import",
+    domain: "Integration",
+    source: "Atlas Forge",
+    definition:
+      "Resolve a public Hugging Face model card and add pipeline, library, downloads, and file list to the vault.",
+    inputs: ["owner/model or URL"],
+    outputs: ["project record"],
+  },
+  {
+    id: "sk_docker_import",
+    name: "Docker Hub image import",
+    domain: "Integration",
+    source: "Atlas Forge",
+    definition:
+      "Resolve a public Docker Hub image and store stars, pulls, and description in the vault.",
+    inputs: ["namespace/image or official name"],
+    outputs: ["project record"],
+  },
+  {
+    id: "sk_github_search",
+    name: "GitHub repository search",
+    domain: "Integration",
+    source: "Atlas Forge",
+    definition:
+      "Search public GitHub repositories by keyword, then import selected hits into the vault.",
+    inputs: ["search query"],
+    outputs: ["candidate list", "project record"],
+  },
 ];
 
 export const tools: Tool[] = [
@@ -245,6 +333,10 @@ export const tools: Tool[] = [
   { id: "tl_nt_fal", name: "fal nodes", family: "NodeTool", languages: "TypeScript", role: "Cloud media generation nodes" },
   { id: "tl_nt_mcp", name: "NodeTool MCP", family: "NodeTool", languages: "TypeScript", role: "External agent workflow control" },
   { id: "tl_gh_public", name: "GitHub public API", family: "Integration", languages: "HTTP", role: "Import public repo metadata" },
+  { id: "tl_gh_search", name: "GitHub search API", family: "Integration", languages: "HTTP", role: "Keyword search public repositories" },
+  { id: "tl_hf_api", name: "Hugging Face model API", family: "Integration", languages: "HTTP", role: "Import public model cards" },
+  { id: "tl_docker_api", name: "Docker Hub API", family: "Integration", languages: "HTTP", role: "Import public image metadata" },
+  { id: "tl_vercel", name: "Vercel deploy", family: "Integration", languages: "HTTP", role: "Host the console production build" },
 ];
 
 export const plugins: Plugin[] = [
@@ -349,10 +441,11 @@ export const projects: Project[] = [
     size: "Extracted Drive tree (1.6 GB zip cataloged)",
     status: "indexed",
     summary:
-      "Visual AI workflow platform: DAG kernel, 100+ tools, agents, storyboard/script/timeline/sketch/3D editors, Hugging Face and fal node packs, CLI and MCP. Indexed from Drive folder packages/, plugins/, docs, ARCHITECTURE.md — binary blob not re-copied into this sandbox.",
+      "Visual AI workflow platform: DAG kernel, agents, storyboard/script/timeline/sketch/3D/game editors, Hugging Face and fal packs, CLI and MCP. Drive tree: agents, chrome-extension, demo, design-sync, docs, electron, examples, packages, plugins, reliability, tools, vscode, web, workspace; plus docker-compose, Dockerfile, fly.toml, turbo monorepo. 1.6 GB zip cataloged without full extract.",
     gaps: [
       "Full monorepo install is not run in this preview.",
       "Provider API keys stay outside the browser.",
+      "Game/3D editor assets not rendered in this console.",
     ],
   },
   {

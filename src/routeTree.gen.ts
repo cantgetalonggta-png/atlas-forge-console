@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAnalyzeRouteImport } from './routes/_app/analyze'
 import { Route as AppImportRouteImport } from './routes/_app/import'
+import { Route as AppConnectorsRouteImport } from './routes/_app/connectors'
 import { Route as AppOntologyRouteImport } from './routes/_app/ontology'
 import { Route as AppPluginsRouteImport } from './routes/_app/plugins'
 import { Route as AppProjectsRouteImport } from './routes/_app/projects'
@@ -36,6 +37,11 @@ const AppAnalyzeRoute = AppAnalyzeRouteImport.update({
 const AppImportRoute = AppImportRouteImport.update({
   id: '/import',
   path: '/import',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConnectorsRoute = AppConnectorsRouteImport.update({
+  id: '/connectors',
+  path: '/connectors',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOntologyRoute = AppOntologyRouteImport.update({
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/analyze': typeof AppAnalyzeRoute
   '/import': typeof AppImportRoute
+  '/connectors': typeof AppConnectorsRoute
   '/ontology': typeof AppOntologyRoute
   '/plugins': typeof AppPluginsRoute
   '/projects': typeof AppProjectsRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/analyze': typeof AppAnalyzeRoute
   '/import': typeof AppImportRoute
+  '/connectors': typeof AppConnectorsRoute
   '/ontology': typeof AppOntologyRoute
   '/plugins': typeof AppPluginsRoute
   '/projects': typeof AppProjectsRoute
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/analyze': typeof AppAnalyzeRoute
   '/_app/import': typeof AppImportRoute
+  '/_app/connectors': typeof AppConnectorsRoute
   '/_app/ontology': typeof AppOntologyRoute
   '/_app/plugins': typeof AppPluginsRoute
   '/_app/projects': typeof AppProjectsRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analyze'
     | '/import'
+    | '/connectors'
     | '/ontology'
     | '/plugins'
     | '/projects'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
   to:
     | '/analyze'
     | '/import'
+    | '/connectors'
     | '/ontology'
     | '/plugins'
     | '/projects'
@@ -122,6 +133,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_app/analyze'
     | '/_app/import'
+    | '/_app/connectors'
     | '/_app/ontology'
     | '/_app/plugins'
     | '/_app/projects'
@@ -162,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/import'
       fullPath: '/import'
       preLoaderRoute: typeof AppImportRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/connectors': {
+      id: '/_app/connectors'
+      path: '/connectors'
+      fullPath: '/connectors'
+      preLoaderRoute: typeof AppConnectorsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ontology': {
@@ -205,6 +224,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAnalyzeRoute: typeof AppAnalyzeRoute
   AppImportRoute: typeof AppImportRoute
+  AppConnectorsRoute: typeof AppConnectorsRoute
   AppOntologyRoute: typeof AppOntologyRoute
   AppPluginsRoute: typeof AppPluginsRoute
   AppProjectsRoute: typeof AppProjectsRoute
@@ -216,6 +236,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAnalyzeRoute: AppAnalyzeRoute,
   AppImportRoute: AppImportRoute,
+  AppConnectorsRoute: AppConnectorsRoute,
   AppOntologyRoute: AppOntologyRoute,
   AppPluginsRoute: AppPluginsRoute,
   AppProjectsRoute: AppProjectsRoute,
