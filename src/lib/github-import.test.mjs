@@ -1,16 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import {
-  parseDockerHubInput,
-  parseGithubInput,
-  parseHuggingFaceInput,
-  projectFromImport,
-} from "./github-import.ts";
 
-// ts not loadable without strip - reimplement minimal checks inline
-const RE_URL = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/i;
+const RE_URL =
+  /^(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/i;
 const RE_SLUG = /^([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)$/;
-function parseGithubInputLocal(raw) {
+
+function parseGithubInput(raw) {
   const trimmed = raw.trim().replace(/\/$/, "");
   const url = trimmed.match(RE_URL);
   if (url) return { owner: url[1], repo: url[2].replace(/\.git$/i, "") };
@@ -18,7 +13,8 @@ function parseGithubInputLocal(raw) {
   if (slug) return { owner: slug[1], repo: slug[2].replace(/\.git$/i, "") };
   return null;
 }
-function parseDockerHubInputLocal(raw) {
+
+function parseDockerHubInput(raw) {
   const trimmed = raw.trim().replace(/\/$/, "");
   if (/^[A-Za-z0-9_.-]+$/.test(trimmed)) return { owner: "library", repo: trimmed };
   const slug = trimmed.match(RE_SLUG);
@@ -27,12 +23,19 @@ function parseDockerHubInputLocal(raw) {
 }
 
 test("parse github slug and url", () => {
-  assert.deepEqual(parseGithubInputLocal("nodetool-ai/nodetool"), { owner: "nodetool-ai", repo: "nodetool" });
-  assert.deepEqual(parseGithubInputLocal("https://github.com/a/b.git"), { owner: "a", repo: "b" });
+  assert.deepEqual(parseGithubInput("nodetool-ai/nodetool"), {
+    owner: "nodetool-ai",
+    repo: "nodetool",
+  });
+  assert.deepEqual(parseGithubInput("https://github.com/a/b.git"), {
+    owner: "a",
+    repo: "b",
+  });
 });
 
 test("parse docker official", () => {
-  assert.deepEqual(parseDockerHubInputLocal("nginx"), { owner: "library", repo: "nginx" });
+  assert.deepEqual(parseDockerHubInput("nginx"), {
+    owner: "library",
+    repo: "nginx",
+  });
 });
-
-console.log("parser tests defined");
