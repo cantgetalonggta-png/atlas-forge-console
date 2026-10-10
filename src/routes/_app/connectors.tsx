@@ -10,7 +10,7 @@ const rows = [
     name: "Vercel",
     status: "connected",
     detail:
-      "Team team_kgQcPVmumwtmK3MdAGlxKJtg · project atlas-forge-console · write scopes re-authenticated.",
+      "Production https://atlas-forge-console.vercel.app · project atlas-forge-console · team echo-ec69.",
   },
   {
     name: "GitHub",
