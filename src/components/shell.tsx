@@ -14,7 +14,8 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { bgTasks, getBgTasksSnapshot } from "@/lib/background-tasks";
 
 const nav = [
   { to: "/", label: "Command", icon: LayoutDashboard },
@@ -26,13 +27,20 @@ const nav = [
   { to: "/import", label: "Import", icon: Download },
   { to: "/connectors", label: "Connectors", icon: Link2 },
   { to: "/setup", label: "Setup", icon: Settings2 },
-  { to: "/jobs", label: "Jobs", icon: ListTodo },
+  { to: "/jobs", label: "Jobs", icon: ListTodo, badge: true as const },
   { to: "/analyze", label: "Analyze", icon: ScanSearch },
 ] as const;
 
 export function Shell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const [activeJobs, setActiveJobs] = useState(0);
+
+  useEffect(() => {
+    bgTasks.hydrate();
+    setActiveJobs(getBgTasksSnapshot().active);
+    return bgTasks.subscribe(() => setActiveJobs(getBgTasksSnapshot().active));
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-fg">
@@ -58,6 +66,7 @@ export function Shell({ children }: { children: ReactNode }) {
             {nav.map((item) => {
               const active = path === item.to;
               const Icon = item.icon;
+              const showBadge = "badge" in item && item.badge && activeJobs > 0;
               return (
                 <Link
                   key={item.to}
@@ -66,12 +75,19 @@ export function Shell({ children }: { children: ReactNode }) {
                   className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm ${active ? "bg-surface-2 text-fg" : "text-muted hover:bg-surface-2 hover:text-fg"}`}
                 >
                   <Icon size={16} className={active ? "text-primary" : ""} />
-                  {item.label}
+                  <span className="flex-1">{item.label}</span>
+                  {showBadge ? (
+                    <span className="rounded-full bg-primary px-1.5 py-0.5 font-mono text-[10px] text-bg">
+                      {activeJobs}
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}
           </nav>
-          <p className="px-5 py-4 font-mono text-xs text-muted">Live · atlas-forge-console.vercel.app</p>
+          <p className="px-5 py-4 font-mono text-xs text-muted">
+            Live · atlas-forge-console.vercel.app
+          </p>
         </aside>
         {open ? (
           <button
@@ -92,8 +108,18 @@ export function Shell({ children }: { children: ReactNode }) {
               <Menu size={18} />
             </button>
             <p className="text-sm text-muted">Agent and audit vault</p>
+            {activeJobs > 0 ? (
+              <Link
+                to="/jobs"
+                className="ml-auto rounded-full bg-surface-2 px-2 py-0.5 font-mono text-xs text-primary"
+              >
+                {activeJobs} job{activeJobs === 1 ? "" : "s"}
+              </Link>
+            ) : null}
           </header>
-          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8">{children}</main>
+          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8">
+            {children}
+          </main>
         </div>
       </div>
     </div>

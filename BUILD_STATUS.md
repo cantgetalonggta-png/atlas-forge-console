@@ -1,21 +1,13 @@
-# Atlas Forge — Cycle 2 BUILD STATUS
+# Atlas Forge — Background Task Managers
 
 ## Production
-https://atlas-forge-console.vercel.app
+https://atlas-forge-console.vercel.app/jobs
 
-## Cycle 2 (Drive TAR + deer-flow)
-- Ingested Drive TAR: ROOT_WORKSPACE-cycle1-2026-10-10.tar.gz
-- Ingested deer-flow-main.zip (~1980 backend .py indexed)
-- Monorepo: `/ROOT_WORKSPACE` (backend FastAPI, skills, encyclopedias, ontology)
-- DeerFlow project + setup guide wired into console
+## Frontend (best-manager)
+- Priority queue · concurrency · retries · AbortSignal cancel
+- localStorage job log · nav badge · dual Jobs UI
+- Optional remote bridge: `VITE_ATLAS_API_URL`
 
-## Backend API (self-host)
-```
-cd ROOT_WORKSPACE/backend
-pip install -r requirements.txt
-uvicorn app.main:app --port 8000
-pytest -q
-```
-
-## Desktop binaries
-Still not bundled in web console — see /setup
+## Backend
+- `ROOT_WORKSPACE/backend` TaskManager: priority heap, retries, batch parents
+- `POST /v1/jobs` · `POST /v1/jobs/batch` · `GET /v1/jobs` · cancel · stats · config

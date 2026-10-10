@@ -2,8 +2,9 @@ import { useEffect, useState, useCallback } from "react";
 import {
   bgTasks,
   getBgTasksSnapshot,
-  type BgTask,
+  type BgRunner,
   type BgTaskKind,
+  type EnqueueOptions,
 } from "@/lib/background-tasks";
 
 export function useBackgroundTasks() {
@@ -16,25 +17,37 @@ export function useBackgroundTasks() {
   }, []);
 
   const enqueue = useCallback(
+    (kind: BgTaskKind | string, runner: BgRunner, opts?: EnqueueOptions) =>
+      bgTasks.enqueue(kind, runner, opts),
+    [],
+  );
+
+  const enqueueBatch = useCallback(
     (
-      kind: BgTaskKind | string,
-      input: Record<string, unknown> | undefined,
-      runner: (
-        task: BgTask,
-        update: (patch: Partial<BgTask>) => void,
-      ) => Promise<unknown>,
-    ) => bgTasks.enqueue(kind, input, runner),
+      items: Array<{
+        kind: BgTaskKind | string;
+        runner: BgRunner;
+        opts?: EnqueueOptions;
+      }>,
+    ) => bgTasks.enqueueBatch(items),
     [],
   );
 
   const cancel = useCallback((id: string) => bgTasks.cancel(id), []);
   const clearFinished = useCallback(() => bgTasks.clearFinished(), []);
+  const setMaxConcurrent = useCallback(
+    (n: number) => bgTasks.setMaxConcurrent(n),
+    [],
+  );
 
   return {
     tasks: snap.tasks,
     stats: snap.stats,
+    active: snap.active,
     enqueue,
+    enqueueBatch,
     cancel,
     clearFinished,
+    setMaxConcurrent,
   };
 }

@@ -12,10 +12,9 @@ from .task_manager import Job, JobKind, TaskManager, manager
 
 
 async def handle_health(job: Job, tm: TaskManager) -> Any:
-    job.progress = 0.3
-    job.message = "probing dependencies"
+    tm.update_progress(job.id, 0.3, "probing dependencies")
     result = await run_probes()
-    job.progress = 0.9
+    tm.update_progress(job.id, 0.9, "probes complete")
     return result
 
 
@@ -24,12 +23,11 @@ async def handle_import_github(job: Job, tm: TaskManager) -> Any:
     repo = job.input.get("repo")
     if not owner or not repo:
         raise ValueError("owner and repo required")
-    job.message = f"importing github {owner}/{repo}"
-    job.progress = 0.2
+    tm.update_progress(job.id, 0.2, f"importing github {owner}/{repo}")
     result = await import_github(str(owner), str(repo), job.input.get("token"))
     if not result.get("ok"):
         raise RuntimeError(result.get("error") or "import failed")
-    job.progress = 0.9
+    tm.update_progress(job.id, 0.9, "import ok")
     return result
 
 
@@ -38,7 +36,7 @@ async def handle_import_hf(job: Job, tm: TaskManager) -> Any:
     model = job.input.get("model") or job.input.get("repo")
     if not owner or not model:
         raise ValueError("owner and model required")
-    job.message = f"importing hf {owner}/{model}"
+    tm.update_progress(job.id, 0.3, f"importing hf {owner}/{model}")
     result = await import_huggingface(str(owner), str(model))
     if not result.get("ok"):
         raise RuntimeError(result.get("error") or "import failed")
@@ -50,7 +48,7 @@ async def handle_import_docker(job: Job, tm: TaskManager) -> Any:
     name = job.input.get("name") or job.input.get("repo")
     if not namespace or not name:
         raise ValueError("namespace and name required")
-    job.message = f"importing docker {namespace}/{name}"
+    tm.update_progress(job.id, 0.3, f"importing docker {namespace}/{name}")
     result = await import_docker(str(namespace), str(name))
     if not result.get("ok"):
         raise RuntimeError(result.get("error") or "import failed")
@@ -61,14 +59,13 @@ async def handle_scan(job: Job, tm: TaskManager) -> Any:
     source = job.input.get("source") or ""
     if not source:
         raise ValueError("source required")
-    job.message = "scanning source"
-    job.progress = 0.4
+    tm.update_progress(job.id, 0.4, "scanning source")
     hits = scan_source(str(source))
     return {"hits": hits, "count": len(hits)}
 
 
 async def handle_ontology(job: Job, tm: TaskManager) -> Any:
-    job.message = "snapshot ontology"
+    tm.update_progress(job.id, 0.5, "snapshot ontology")
     return {
         "skills": SKILL_TREE,
         "tools": TOOL_TREE,
@@ -79,10 +76,40 @@ async def handle_ontology(job: Job, tm: TaskManager) -> Any:
 
 
 async def handle_batch(job: Job, tm: TaskManager) -> Any:
-    # Parent batch job: completion driven by children in TaskManager
-    job.message = "waiting for children"
-    job.progress = 0.1
-    return {"status": "parent", "children": job.children}
+    # Parent batch: children drive completion in TaskManager._maybe_finish_parent
+    tm.update_progress(job.id, 0.1, "waiting for children")
+    # Keep parent "running" until children finish — do not mark succeeded here.
+    # Return placeholder; finalization happens in _maybe_finish_parent.
+    while True:
+        children = [tm.get(c) for c in job.children if tm.get(c)]
+        if children and all(
+            c and c.state not in ("queued", "running") for c in children
+        ):
+            break
+        if not children and job.input.get("count", 0) == 0:
+            break
+        # If children not yet attached, wait briefly
+        import asyncio
+
+        await asyncio.sleep(0.05)
+        # Re-check after children enqueued
+        children = [tm.get(c) for c in job.children if tm.get(c)]
+        if children and all(
+            c and c.state not in ("queued", "running") for c in children
+        ):
+            break
+        # Safety: parent handler exits when children done; otherwise short wait
+        if children:
+            active = [c for c in children if c and c.state in ("queued", "running")]
+            if not active:
+                break
+        else:
+            # children list may still be filling
+            await asyncio.sleep(0.05)
+            if job.children:
+                continue
+            break
+    return {"status": "parent", "children": list(job.children)}
 
 
 def register_all(tm: TaskManager | None = None) -> TaskManager:

@@ -125,6 +125,8 @@ async def oauth_github_start(body: OAuthStartBody) -> dict:
 class JobCreateBody(BaseModel):
     kind: str
     input: dict = Field(default_factory=dict)
+    priority: str = "normal"
+    max_attempts: int = 1
 
 
 class BatchCreateBody(BaseModel):
@@ -153,7 +155,12 @@ async def get_job(job_id: str) -> dict:
 @app.post("/v1/jobs")
 async def create_job(body: JobCreateBody) -> dict:
     try:
-        job = await manager.enqueue(body.kind, body.input)
+        job = await manager.enqueue(
+            body.kind,
+            body.input,
+            priority=body.priority,
+            max_attempts=body.max_attempts,
+        )
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
     return job.to_public()
@@ -163,7 +170,15 @@ async def create_job(body: JobCreateBody) -> dict:
 async def create_batch(body: BatchCreateBody) -> dict:
     try:
         job = await manager.enqueue_batch(
-            [{"kind": i.kind, "input": i.input} for i in body.items]
+            [
+                {
+                    "kind": i.kind,
+                    "input": i.input,
+                    "priority": getattr(i, "priority", "normal"),
+                    "max_attempts": getattr(i, "max_attempts", 1),
+                }
+                for i in body.items
+            ]
         )
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
@@ -177,3 +192,13 @@ async def cancel_job(job_id: str) -> dict:
         raise HTTPException(400, "cannot cancel")
     job = manager.get(job_id)
     return job.to_public() if job else {"ok": True}
+
+
+class JobsConfigBody(BaseModel):
+    max_concurrent: int = Field(ge=1, le=32)
+
+
+@app.post("/v1/jobs/config")
+async def jobs_config(body: JobsConfigBody) -> dict:
+    manager.set_max_concurrent(body.max_concurrent)
+    return manager.stats()

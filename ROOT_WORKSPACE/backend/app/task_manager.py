@@ -1,20 +1,23 @@
-"""In-process background job manager for Atlas Forge API.
+"""In-process background job manager for Atlas Forge API (best-manager).
 
-Best-manager design:
-- Single process registry (dict + asyncio.Lock)
-- Job states: queued → running → succeeded | failed | cancelled
-- Workers are asyncio tasks; no external broker required for single-node
-- Optional fan-out for health/import/scan workloads
+Design:
+- asyncio workers + Semaphore concurrency
+- Priority queue (high < normal < low)
+- Optional per-job max_attempts with exponential backoff
+- Batch parent tracks children completion
+- Progress/message mutators for handlers
+- No external broker required (single-node); swap for Redis later
 """
 
 from __future__ import annotations
 
 import asyncio
+import heapq
 import time
 import uuid
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Any, Awaitable, Callable, Optional
+from typing import Any, Awaitable, Callable
 
 
 class JobState(str, Enum):
@@ -35,6 +38,9 @@ class JobKind(str, Enum):
     batch = "batch"
 
 
+PRIORITY_RANK = {"high": 0, "normal": 1, "low": 2}
+
+
 @dataclass
 class Job:
     id: str
@@ -50,6 +56,9 @@ class Job:
     error: str | None = None
     parent_id: str | None = None
     children: list[str] = field(default_factory=list)
+    priority: str = "normal"
+    attempt: int = 0
+    max_attempts: int = 1
 
     def to_public(self) -> dict[str, Any]:
         d = asdict(self)
@@ -70,11 +79,22 @@ class TaskManager:
         self._handlers: dict[str, Handler] = {}
         self._lock = asyncio.Lock()
         self._sem = asyncio.Semaphore(max_concurrent)
+        self._max_concurrent = max_concurrent
         self._max_history = max_history
         self._tasks: dict[str, asyncio.Task[Any]] = {}
+        self._heap: list[tuple[int, float, str]] = []  # rank, created, id
+        self._seq = 0
+        self._worker: asyncio.Task[Any] | None = None
+        self._wake = asyncio.Event()
 
     def register(self, kind: str, handler: Handler) -> None:
         self._handlers[kind] = handler
+
+    def set_max_concurrent(self, n: int) -> None:
+        n = max(1, min(32, int(n)))
+        # recreate semaphore relative to free slots is hard; store desired for stats
+        self._max_concurrent = n
+        self._sem = asyncio.Semaphore(n)
 
     async def enqueue(
         self,
@@ -83,9 +103,13 @@ class TaskManager:
         *,
         parent_id: str | None = None,
         message: str = "queued",
+        priority: str = "normal",
+        max_attempts: int = 1,
     ) -> Job:
         if kind not in self._handlers:
             raise ValueError(f"No handler registered for kind={kind}")
+        if priority not in PRIORITY_RANK:
+            priority = "normal"
         job = Job(
             id=str(uuid.uuid4()),
             kind=kind,
@@ -94,27 +118,37 @@ class TaskManager:
             input=input_data or {},
             message=message,
             parent_id=parent_id,
+            priority=priority,
+            max_attempts=max(1, max_attempts),
         )
         async with self._lock:
             self._jobs[job.id] = job
             if parent_id and parent_id in self._jobs:
                 self._jobs[parent_id].children.append(job.id)
+            heapq.heappush(
+                self._heap,
+                (PRIORITY_RANK[priority], job.created_at, job.id),
+            )
             self._trim_locked()
-        task = asyncio.create_task(self._run(job.id), name=f"job-{job.kind}-{job.id[:8]}")
-        self._tasks[job.id] = task
+            self._ensure_dispatcher()
+        self._wake.set()
         return job
 
     async def enqueue_batch(self, items: list[dict[str, Any]]) -> Job:
-        """items: [{kind, input}, ...] — parent batch job tracks children."""
         parent = await self.enqueue(
             JobKind.batch.value,
             {"count": len(items)},
             message=f"batch of {len(items)}",
+            priority="high",
         )
         for item in items:
-            kind = item["kind"]
-            data = item.get("input") or {}
-            await self.enqueue(kind, data, parent_id=parent.id)
+            await self.enqueue(
+                item["kind"],
+                item.get("input") or {},
+                parent_id=parent.id,
+                priority=item.get("priority") or "normal",
+                max_attempts=int(item.get("max_attempts") or 1),
+            )
         return parent
 
     def get(self, job_id: str) -> Job | None:
@@ -137,19 +171,32 @@ class TaskManager:
         return {
             "total": len(self._jobs),
             "running_tasks": running,
+            "queued_heap": len(self._heap),
             "by_state": by_state,
             "by_kind": by_kind,
             "handlers": sorted(self._handlers.keys()),
-            "max_concurrent": self._sem._value + running,  # type: ignore[attr-defined]
+            "max_concurrent": self._max_concurrent,
         }
 
+    def update_progress(self, job_id: str, progress: float, message: str | None = None) -> None:
+        job = self._jobs.get(job_id)
+        if not job:
+            return
+        job.progress = max(0.0, min(1.0, float(progress)))
+        if message is not None:
+            job.message = message
+
     async def cancel(self, job_id: str) -> bool:
-        task = self._tasks.get(job_id)
         job = self._jobs.get(job_id)
         if not job:
             return False
-        if job.state in (JobState.succeeded.value, JobState.failed.value, JobState.cancelled.value):
+        if job.state in (
+            JobState.succeeded.value,
+            JobState.failed.value,
+            JobState.cancelled.value,
+        ):
             return False
+        task = self._tasks.get(job_id)
         if task and not task.done():
             task.cancel()
         job.state = JobState.cancelled.value
@@ -157,34 +204,81 @@ class TaskManager:
         job.message = "cancelled"
         return True
 
+    def _ensure_dispatcher(self) -> None:
+        if self._worker is None or self._worker.done():
+            self._worker = asyncio.create_task(self._dispatch_loop(), name="atlas-job-dispatcher")
+
+    async def _dispatch_loop(self) -> None:
+        while True:
+            try:
+                job_id = await self._pop_next()
+                if job_id is None:
+                    self._wake.clear()
+                    try:
+                        await asyncio.wait_for(self._wake.wait(), timeout=1.0)
+                    except asyncio.TimeoutError:
+                        pass
+                    continue
+                task = asyncio.create_task(
+                    self._run(job_id), name=f"job-{job_id[:8]}"
+                )
+                self._tasks[job_id] = task
+            except asyncio.CancelledError:
+                raise
+            except Exception:  # noqa: BLE001
+                await asyncio.sleep(0.05)
+
+    async def _pop_next(self) -> str | None:
+        async with self._lock:
+            while self._heap:
+                _rank, _created, job_id = heapq.heappop(self._heap)
+                job = self._jobs.get(job_id)
+                if not job or job.state != JobState.queued.value:
+                    continue
+                return job_id
+        return None
+
     async def _run(self, job_id: str) -> None:
         job = self._jobs[job_id]
         handler = self._handlers[job.kind]
         async with self._sem:
-            job.state = JobState.running.value
-            job.started_at = time.time()
-            job.message = "running"
-            job.progress = 0.05
-            try:
-                result = await handler(job, self)
+            while True:
                 if job.state == JobState.cancelled.value:
                     return
-                job.result = result
-                job.progress = 1.0
-                job.state = JobState.succeeded.value
-                job.message = "succeeded"
-            except asyncio.CancelledError:
-                job.state = JobState.cancelled.value
-                job.message = "cancelled"
-                job.error = "cancelled"
-            except Exception as e:  # noqa: BLE001
-                job.state = JobState.failed.value
-                job.message = "failed"
-                job.error = str(e)
-            finally:
-                job.finished_at = time.time()
-                self._tasks.pop(job_id, None)
-                await self._maybe_finish_parent(job)
+                job.attempt += 1
+                job.state = JobState.running.value
+                job.started_at = time.time()
+                job.message = f"running (attempt {job.attempt}/{job.max_attempts})"
+                job.progress = 0.05
+                try:
+                    result = await handler(job, self)
+                    if job.state == JobState.cancelled.value:
+                        return
+                    job.result = result
+                    job.progress = 1.0
+                    job.state = JobState.succeeded.value
+                    job.message = "succeeded"
+                    break
+                except asyncio.CancelledError:
+                    job.state = JobState.cancelled.value
+                    job.message = "cancelled"
+                    job.error = "cancelled"
+                    break
+                except Exception as e:  # noqa: BLE001
+                    job.error = str(e)
+                    if job.attempt < job.max_attempts:
+                        backoff = min(8.0, 0.4 * (2 ** (job.attempt - 1)))
+                        job.state = JobState.queued.value
+                        job.message = f"retry in {backoff:.1f}s · {e}"
+                        job.progress = 0.0
+                        await asyncio.sleep(backoff)
+                        continue
+                    job.state = JobState.failed.value
+                    job.message = "failed"
+                    break
+            job.finished_at = time.time()
+            self._tasks.pop(job_id, None)
+            await self._maybe_finish_parent(job)
 
     async def _maybe_finish_parent(self, job: Job) -> None:
         if not job.parent_id:
@@ -195,10 +289,20 @@ class TaskManager:
         children = [self._jobs[c] for c in parent.children if c in self._jobs]
         if not children:
             return
-        if any(c.state in (JobState.queued.value, JobState.running.value) for c in children):
-            done = sum(1 for c in children if c.state not in (JobState.queued.value, JobState.running.value))
+        if any(
+            c.state in (JobState.queued.value, JobState.running.value) for c in children
+        ):
+            done = sum(
+                1
+                for c in children
+                if c.state
+                not in (JobState.queued.value, JobState.running.value)
+            )
             parent.progress = done / max(len(children), 1)
             parent.message = f"{done}/{len(children)} children finished"
+            parent.state = JobState.running.value
+            if parent.started_at is None:
+                parent.started_at = time.time()
             return
         failed = [c for c in children if c.state == JobState.failed.value]
         parent.progress = 1.0
@@ -207,6 +311,7 @@ class TaskManager:
             "children": [c.to_public() for c in children],
             "failed": len(failed),
             "succeeded": sum(1 for c in children if c.state == JobState.succeeded.value),
+            "cancelled": sum(1 for c in children if c.state == JobState.cancelled.value),
         }
         if failed:
             parent.state = JobState.failed.value
@@ -222,7 +327,12 @@ class TaskManager:
         finished = [
             j
             for j in self._jobs.values()
-            if j.state in (JobState.succeeded.value, JobState.failed.value, JobState.cancelled.value)
+            if j.state
+            in (
+                JobState.succeeded.value,
+                JobState.failed.value,
+                JobState.cancelled.value,
+            )
         ]
         finished.sort(key=lambda j: j.created_at)
         while len(self._jobs) > self._max_history and finished:
@@ -230,5 +340,4 @@ class TaskManager:
             self._jobs.pop(old.id, None)
 
 
-# Global singleton for process
 manager = TaskManager()
